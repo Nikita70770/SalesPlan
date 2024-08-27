@@ -1,37 +1,37 @@
 [
     {
         "fullName": "Август Романов",
-        "amountSale": 1250000,
-        "maxAmount": 2000000
+        "amountSale": 1850000,
+        "monthlyRate": 2000000
     },
     {
         "fullName": "Анастасия Орловская",
         "amountSale": 1450000,
-        "maxAmount": 2000000
+        "monthlyRate": 2000000
     },
     {
         "fullName": "Имя Фамилия",
         "amountSale": 250000,
-        "maxAmount": 2000000
+        "monthlyRate": 2000000
     },
     {
         "fullName": "Имя Фамилия",
         "amountSale": 1750000,
-        "maxAmount": 2000000
+        "monthlyRate": 2000000
     },
     {
         "fullName": "Имя Фамилия",
         "amountSale": 1950000,
-        "maxAmount": 2000000
+        "monthlyRate": 2000000
     },
     {
         "fullName": "Имя Фамилия",
-        "amountSale": 11750000,
-        "maxAmount": 2000000
+        "amountSale": 750000,
+        "monthlyRate": 2000000
     },
     {
         "fullName": "Имя Фамилия",
-        "amountSale": 21750000,
-        "maxAmount": 2000000
+        "amountSale": 1750000,
+        "monthlyRate": 2000000
     }
 ]

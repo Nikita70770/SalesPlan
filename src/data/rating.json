@@ -1,0 +1,94 @@
+[
+    {
+        "monthlyRate": 2000000,
+        "data": [
+            {
+                "": [0, 1000000],
+                "range": [0, 50],
+                "bcColor": { "backgroundColor": "#D71920" },
+                "imgIcon": null
+            },
+            {
+                "": [1000000, 1800000],
+                "range": [50, 90],
+                "bcColor": {
+                    "backgroundColor": "#666666"
+                },
+                "imgIcon": null
+            },
+            {
+                "": [1800000, 2000000],
+                "range": [90, 100],
+                "bcColor": {
+                    "background": "linear-gradient(90deg, #AEBC5B 0%, #A5B452 100%)"
+                },
+                "imgIcon": null
+            }
+        ]
+    },
+    {
+        "monthlyRate": 4000000,
+        "multiplier": "x2",
+        "data": [
+            {
+                "": [2000000, 3000000],
+                "range": [0, 50],
+                "bcColor": { "background": "linear-gradient(284.38deg, #CE8257 34.67%, #ECAC88 66.73%)" },
+                "imgIcon": "/img/bronze.svg"
+            },
+            {
+                "": [3000000, 3800000],
+                "range": [50, 90],
+                "bcColor": {
+                    "background": "linear-gradient(275.69deg, #B0B0B0 14.75%, #E7E7E7 51.62%, #B0B0B0 88.49%)"
+                },
+                "imgIcon": "/img/silver.svg"
+            },
+            {
+                "": [3800000, 4000000],
+                "range": [90, 100],
+                "bcColor": {
+                    "background": "linear-gradient(284.38deg, #CEAB57 34.67%, #D2B05E 38.83%, #EACF8F 66.73%)"
+                },
+                "imgIcon": "/img/gold.svg"
+            }
+        ]
+    },
+    {
+        "monthlyRate": 6000000,
+        "multiplier": "x3",
+        "data": [
+            {
+                "": [4000000, 5000000],
+                "range": [0, 50],
+                "bcColor": {
+                    "background": "linear-gradient(278.41deg, #BFDADA 21.94%, #D9F2F2 49.43%, #CCD9D9 76.92%)"
+                },
+                "imgIcon": "/img/diamond.svg"
+            },
+            {
+                "": [5000000, 5800000],
+                "range": [50, 90],
+                "bcColor": { "background": "linear-gradient(284.38deg, #CE5782 34.67%, #EA7BA3 66.73%)" },
+                "imgIcon": "/img/star.svg"
+            },
+            {
+                "": [5800000, 6000000],
+                "range": [90, 100],
+                "bcColor": { "background": "linear-gradient(284.38deg, #52BFD8 34.67%, #49A1B5 66.73%)" },
+                "imgIcon": "/img/angel.svg"
+            }
+        ]
+    },
+    {
+        "monthlyRate": 8000000,
+        "multiplier": "x4",
+        "data": [
+            {
+                "range": [0, 100],
+                "bcColor": { "backgroundColor": "#000000" },
+                "imgIcon": "/img/demon.svg"
+            }
+        ]
+    }
+]

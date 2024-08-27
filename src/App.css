@@ -51,12 +51,45 @@ tr {
     grid-template-columns: repeat(3, 1fr);
 }
 
-.amount_sale_cell {
+.curr_total_sales,
+.curr_amount_sale {
     display: grid;
-    grid-template-columns: 45% 45% 10%;
+    grid-template-columns: repeat(100, 1fr);
+    position: relative;
+    border-radius: 11px;
     background-color: #f1f1f1;
 }
 
-.amount_sale_cell td {
+.curr_total_sales th:first-child,
+.curr_amount_sale td:first-child {
+    grid-column: 1/2 span;
     padding: 17px 0;
 }
+
+.curr_total_sales .separator,
+.curr_amount_sale .separator {
+    width: 3px;
+    height: 100%;
+    position: absolute;
+    background-color: #999999;
+}
+
+.curr_total_sales .separator._50,
+.curr_amount_sale .separator._50 {
+    grid-column: 50/1 span;
+}
+
+.curr_total_sales .separator._90,
+.curr_amount_sale .separator._90 {
+    grid-column: 90/1 span;
+}
+
+/* .amount_sale_cell td:first-child {
+    border-top-left-radius: 11px;
+    border-bottom-left-radius: 11px;
+}
+
+.amount_sale_cell td:last-child {
+    border-top-right-radius: 11px;
+    border-bottom-right-radius: 11px;
+} */

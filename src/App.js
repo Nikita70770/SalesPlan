@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 
 import { dataLoader } from './helpers/helper';
+import SalesService from './services/sales.service';
+
+import rating from './data/rating.json';
 
 import './App.css';
 
@@ -20,61 +23,15 @@ function Header() {
     );
 }
 
-// function SalesManager({ title }) {
-//     return (
-//         <li className="sales_manager">
-//             <p>{title}</p>
-//         </li>
-//     );
-// }
-
-// function SalesCurrentAmount({ currAmount }) {
-//     return (
-//         <li className="currnet_sales">
-//             <p>{currAmount}</p>
-//         </li>
-//     );
-// }
-
-// function SalesMaxAmount({ maxAmount }) {
-//     return (
-//         <li className="max_sales_amount">
-//             <p>{maxAmount}</p>
-//         </li>
-//     );
-// }
-
-// function SalesGeneral({ currGeneralAmount, maxGeneralAmount }) {
-//     return (
-//         <li className="sales_general">
-//             <ul className="sales_general_content">
-//                 <SalesManager title={'Общий'} />
-//                 <SalesCurrentAmount currAmount={currGeneralAmount} />
-//                 <SalesMaxAmount maxAmount={maxGeneralAmount} />
-//             </ul>
-//         </li>
-//     );
-// }
-
-// function SalesItem({ item }) {
-//     const managerSales = {
-//         'fullName': item.fullName,
-//         'amountSale': item.amountSale,
-//         'maxAmount': item.maxAmount
-//     };
-
-//     return (
-//         <li className="sales_item">
-//             <ul className="sales_general_content">
-//                 <SalesManager title={managerSales.fullName} />
-//                 <SalesCurrentAmount currAmount={managerSales.amountSale} />
-//                 <SalesMaxAmount maxAmount={managerSales.maxAmount} />
-//             </ul>
-//         </li>
-//     );
-// }
-
 function SalesPlan({ data }) {
+    const currTotalSales = SalesService.getCurrTotalSales(data);
+    const totalSales = SalesService.getTotalSales(data);
+    const totalSalesAsPercentage = SalesService.getCurrTotalSalesAsPercentage(currTotalSales, totalSales);
+
+    const styleGeneralSales = {
+        ...SalesService.getColorStyle(rating, currTotalSales, totalSalesAsPercentage),
+        gridColumn: `1/${totalSalesAsPercentage} span`
+    };
     return (
         <main className="main">
             <div className="wrapper">
@@ -83,21 +40,44 @@ function SalesPlan({ data }) {
                         <thead className="sales_thead">
                             <tr>
                                 <th>Общие</th>
-                                <th>7500000</th>
-                                <th>15000000</th>
+                                <th className="curr_total_sales">
+                                    <th style={styleGeneralSales}>{currTotalSales}</th>
+                                    <th className="separator _50"></th>
+                                    <th className="separator _90"></th>
+                                </th>
+                                <th>{SalesService.getTotalSales(data)}</th>
                             </tr>
                         </thead>
                         <tbody className="sales_tbody">
                             {data.map(item => {
+                                const currSalesAsPercentage = SalesService.getCurrSalesAsPercentage(
+                                    item.amountSale,
+                                    item.monthlyRate
+                                );
+                                const styleColor = SalesService.getColorStyle(
+                                    rating,
+                                    SalesService.getMonthlyRate(item.amountSale, item.monthlyRate),
+                                    currSalesAsPercentage
+                                );
+                                const styleSales = {
+                                    ...styleColor,
+                                    gridColumn: `1/${currSalesAsPercentage} span`
+                                };
+                                const indRate = rating
+                                    .map(elem => elem.monthlyRate)
+                                    .indexOf(SalesService.getMonthlyRate(item.amountSale, item.monthlyRate));
                                 return (
                                     <tr>
                                         <td>{item.fullName}</td>
-                                        <td className="amount_sale_cell">
-                                            <td style={{ backgroundColor: 'red' }}>{item.amountSale}</td>
-                                            <td style={{ backgroundColor: '#f1f1f1' }}></td>
-                                            <td style={{ backgroundColor: 'blue' }}></td>
+                                        <td className="curr_amount_sale">
+                                            <td style={styleSales}>{item.amountSale}</td>
+                                            <td className="separator _50"></td>
+                                            <td className="separator _90"></td>
                                         </td>
-                                        <td>{item.maxAmount}</td>
+                                        <td>
+                                            <span className="multiplier">{rating[indRate]?.multiplier}</span>
+                                            {item.monthlyRate}
+                                        </td>
                                     </tr>
                                 );
                             })}
