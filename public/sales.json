@@ -1,12 +1,12 @@
 [
     {
         "fullName": "Август Романов",
-        "amountSale": 1850000,
+        "amountSale": 1100000,
         "monthlyRate": 2000000
     },
     {
         "fullName": "Анастасия Орловская",
-        "amountSale": 1450000,
+        "amountSale": 3850000,
         "monthlyRate": 2000000
     },
     {
@@ -16,7 +16,7 @@
     },
     {
         "fullName": "Имя Фамилия",
-        "amountSale": 1750000,
+        "amountSale": 1050000,
         "monthlyRate": 2000000
     },
     {

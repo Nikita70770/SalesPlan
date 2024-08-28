@@ -1,11 +1,15 @@
 @import url(./css/reset.css);
+@import url(./css/fonts.css);
 
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     font-family: 'Montserrat-Regular';
-    font-size: calc(8px + 4 * (100vw - 320px) / 1600);
+    /* font-size: 33px; */
+    font-size: calc(12px + 12 * (100vw - 320px) / 1600);
+    /* font-size: calc(8px + 4 * (100vw - 320px) / 1600); */
+    color: #666666;
 }
 
 #root {

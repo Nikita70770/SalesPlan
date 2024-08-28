@@ -1,3 +1,5 @@
+import { between } from '../helpers/helper';
+
 const getCurrTotalSalesAsPercentage = (currTotalAmountSales, totalSales) => {
     return Math.ceil((currTotalAmountSales * 100) / totalSales);
 };
@@ -9,33 +11,46 @@ const getCurrSalesAsPercentage = (amountSale, monthlyRate) => {
 };
 
 const getCurrTotalSales = sales => {
-    return sales.map(elem => elem.amountSale).reduce((a, b) => a + b, 0);
+    return sales.map(elem => elem.total_payments).reduce((a, b) => a + b, 0);
 };
 
 const getTotalSales = sales => {
-    return sales.map(elem => elem.monthlyRate).reduce((a, b) => a + b, 0);
-};
-
-const between = (x, min, max) => {
-    return x >= min && x <= max;
+    return sales.map(elem => elem.monthly_rate).reduce((a, b) => a + b, 0);
 };
 
 const getMonthlyRate = (amountSale, monthlyRate) => {
-    return Math.ceil(amountSale / monthlyRate) * monthlyRate;
+    const monthlyRateVal = Math.ceil(amountSale / monthlyRate) * monthlyRate;
+    // console.log(`monthlyRateVal: ${monthlyRateVal}`);
+    return monthlyRateVal >= 8000000 ? 8000000 : monthlyRateVal;
 };
 
-const getColorStyle = (rating, monthlyRate, percents) => {
-    let colorStyle = { backgroundColor: '#ffffff' };
-    // console.log(`percents: ${percents}`);
+// const getColorStyle = (rating, monthlyRate, percents) => {
+//     let colorStyle = { backgroundColor: '#ffffff' };
 
-    console.log(`rating: ${JSON.stringify(rating, null, 4)}`);
+//     const indRate = rating.map(elem => elem.monthlyRate).indexOf(monthlyRate);
+//     console.log(`percents: ${percents}\nindRate: ${indRate}\nmonthlyRate:${monthlyRate}`);
+
+//     rating[indRate]?.data.map(elem => {
+//         const percentsVal = percents > 100 ? 100 : percents;
+//         if (between(percentsVal, elem.range[0], elem.range[1])) colorStyle = elem.bcColor;
+//     });
+
+//     // console.log(`colorStyle: ${JSON.stringify(colorStyle, null, 4)}`);
+
+//     return colorStyle;
+// };
+
+const getMultiplier = (rating, monthlyRate, percents) => {
+    let classMultiplier = '';
+
     const indRate = rating.map(elem => elem.monthlyRate).indexOf(monthlyRate);
 
     rating[indRate]?.data.map(elem => {
-        if (between(percents, elem.range[0], elem.range[1])) colorStyle = elem.bcColor;
+        const percentsVal = percents > 100 ? 100 : percents;
+        if (between(percentsVal, elem.range[0], elem.range[1])) classMultiplier = elem.className;
     });
 
-    return colorStyle;
+    return classMultiplier;
 };
 
 const SalesService = {
@@ -44,27 +59,7 @@ const SalesService = {
     getCurrTotalSales,
     getTotalSales,
     getMonthlyRate,
-    getColorStyle
+    getMultiplier
 };
 
 export default SalesService;
-
-// if (amountSale < 2000000) {
-//     if (percents <= 50) colorStyle = { backgroundColor: '#D71920' };
-//     else if (percents > 50 && percents <= 90) colorStyle = { backgroundColor: '#666666' };
-//     else if (percents > 90 && percents <= 100)
-//         colorStyle = { background: 'linear-gradient(90deg, #AEBC5B 0%, #A5B452 100%)' };
-// } else if (amountSale > 2000000 && amountSale <= 4000000) {
-//     if (percents <= 50) colorStyle = { background: 'linear-gradient(284.38deg, #CE8257 34.67%, #ECAC88 66.73%)' };
-//     else if (percents > 50 && percents <= 90)
-//         colorStyle = { background: 'linear-gradient(275.69deg, #B0B0B0 14.75%, #E7E7E7 51.62%, #B0B0B0 88.49%)' };
-//     else if (percents > 90 && percents <= 100)
-//         colorStyle = { background: 'linear-gradient(284.38deg, #CEAB57 34.67%, #D2B05E 38.83%, #EACF8F 66.73%)' };
-// } else if (amountSale > 4000000 && amountSale <= 6000000) {
-//     if (percents <= 50)
-//         colorStyle = { background: 'linear-gradient(278.41deg, #BFDADA 21.94%, #D9F2F2 49.43%, #CCD9D9 76.92%)' };
-//     else if (percents > 50 && percents <= 90)
-//         colorStyle = { background: 'linear-gradient(284.38deg, #CE5782 34.67%, #EA7BA3 66.73%)' };
-//     else if (percents > 90 && percents <= 100)
-//         colorStyle = { background: 'linear-gradient(284.38deg, #52BFD8 34.67%, #49A1B5 66.73%)' };
-// } else if (amountSale > 6000000) colorStyle = { backgroundColor: '#000000' };

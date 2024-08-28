@@ -3,25 +3,18 @@
         "monthlyRate": 2000000,
         "data": [
             {
-                "": [0, 1000000],
                 "range": [0, 50],
-                "bcColor": { "backgroundColor": "#D71920" },
+                "className": "x1_0_50",
                 "imgIcon": null
             },
             {
-                "": [1000000, 1800000],
                 "range": [50, 90],
-                "bcColor": {
-                    "backgroundColor": "#666666"
-                },
+                "className": "x1_50_90",
                 "imgIcon": null
             },
             {
-                "": [1800000, 2000000],
                 "range": [90, 100],
-                "bcColor": {
-                    "background": "linear-gradient(90deg, #AEBC5B 0%, #A5B452 100%)"
-                },
+                "className": "x1_90_100",
                 "imgIcon": null
             }
         ]
@@ -31,25 +24,18 @@
         "multiplier": "x2",
         "data": [
             {
-                "": [2000000, 3000000],
                 "range": [0, 50],
-                "bcColor": { "background": "linear-gradient(284.38deg, #CE8257 34.67%, #ECAC88 66.73%)" },
+                "className": "x2_0_50",
                 "imgIcon": "/img/bronze.svg"
             },
             {
-                "": [3000000, 3800000],
                 "range": [50, 90],
-                "bcColor": {
-                    "background": "linear-gradient(275.69deg, #B0B0B0 14.75%, #E7E7E7 51.62%, #B0B0B0 88.49%)"
-                },
+                "className": "x2_50_90",
                 "imgIcon": "/img/silver.svg"
             },
             {
-                "": [3800000, 4000000],
                 "range": [90, 100],
-                "bcColor": {
-                    "background": "linear-gradient(284.38deg, #CEAB57 34.67%, #D2B05E 38.83%, #EACF8F 66.73%)"
-                },
+                "className": "x2_90_100",
                 "imgIcon": "/img/gold.svg"
             }
         ]
@@ -59,23 +45,19 @@
         "multiplier": "x3",
         "data": [
             {
-                "": [4000000, 5000000],
                 "range": [0, 50],
-                "bcColor": {
-                    "background": "linear-gradient(278.41deg, #BFDADA 21.94%, #D9F2F2 49.43%, #CCD9D9 76.92%)"
-                },
+                "className": "x3_0_50",
                 "imgIcon": "/img/diamond.svg"
             },
             {
-                "": [5000000, 5800000],
                 "range": [50, 90],
-                "bcColor": { "background": "linear-gradient(284.38deg, #CE5782 34.67%, #EA7BA3 66.73%)" },
+                "className": "x3_50_90",
+
                 "imgIcon": "/img/star.svg"
             },
             {
-                "": [5800000, 6000000],
                 "range": [90, 100],
-                "bcColor": { "background": "linear-gradient(284.38deg, #52BFD8 34.67%, #49A1B5 66.73%)" },
+                "className": "x3_90_100",
                 "imgIcon": "/img/angel.svg"
             }
         ]
@@ -86,7 +68,7 @@
         "data": [
             {
                 "range": [0, 100],
-                "bcColor": { "backgroundColor": "#000000" },
+                "className": "x4_0_100",
                 "imgIcon": "/img/demon.svg"
             }
         ]
