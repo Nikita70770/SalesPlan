@@ -10,7 +10,6 @@ export const numberWithSpaces = x => {
 
 export const dataLoader = async path => {
     const config = {
-        timeout: 5000,
         headers: {
             'Content-Type': 'application/json'
         }

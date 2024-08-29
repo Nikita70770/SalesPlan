@@ -27,9 +27,34 @@
 }
 
 .header_item.date {
+    position: relative;
     font-size: calc(14px + 11 * (100vw - 320px) / 1600);
     font-family: 'Montserrat-SemiBold';
     color: #666666;
+}
+
+.calendar_header {
+    text-align: right;
+}
+
+.calendar_window {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 3;
+}
+
+.btn_close_calendar {
+    margin-top: 35px;
+    width: 16px;
+    height: 16px;
+}
+
+.btn_close_calendar img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
 }
 
 /* Main */
@@ -118,7 +143,8 @@ tr {
     top: 50%;
     left: 5%;
     transform: translate(-5%, -50%);
-    color: #fff;
+    color: white;
+    text-shadow: -1px -1px 0 #444444, 1px -1px 0 #444444, -1px 1px 0 #444444, 1px 1px 0 #444444;
 }
 
 .curr_total_progress,
@@ -167,90 +193,8 @@ tr {
     background-color: #666666;
 }
 
-/* Ставка х1 */
-.curr_amount_progress .x1_0_50 {
-    background-color: #d71920;
-}
-.curr_amount_progress .x1_50_90 {
-    background-color: #666666;
-}
-.curr_amount_progress .x1_90_100 {
-    background: -webkit-linear-gradient(90deg, #aebc5b 0%, #a5b452 100%);
-}
-
-/* Ставка х2 */
-.curr_amount_progress .x2_0_50 {
-    background: -webkit-linear-gradient(284.38deg, #ce8257 34.67%, #ecac88 66.73%);
-}
-.curr_amount_progress .x2_50_90 {
-    background: -webkit-linear-gradient(275.69deg, #b0b0b0 14.75%, #e7e7e7 51.62%, #b0b0b0 88.49%);
-}
-.curr_amount_progress .x2_90_100 {
-    background: -webkit-linear-gradient(284.38deg, #ceab57 34.67%, #d2b05e 38.83%, #eacf8f 66.73%);
-}
-
-/* Ставка х3 */
-.curr_amount_progress .x3_0_50 {
-    background: -webkit-linear-gradient(278.41deg, #bfdada 21.94%, #d9f2f2 49.43%, #ccd9d9 76.92%);
-}
-.curr_amount_progress .x3_50_90 {
-    background: -webkit-linear-gradient(284.38deg, #ce5782 34.67%, #ea7ba3 66.73%);
-}
-.curr_amount_progress .x3_90_100 {
-    background: -webkit-linear-gradient(284.38deg, #52bfd8 34.67%, #49a1b5 66.73%);
-}
-
-/* Ставка х4 */
-.curr_amount_progress .x4_0_100 {
-    background-color: #000000;
-}
-
 .multiplier {
     font-family: 'Montserrat-SemiBold';
-}
-
-/* Множители */
-.multiplier.x2_0_50 {
-    background: -webkit-linear-gradient(284.38deg, #ce8257 34.67%, #ecac88 66.73%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.multiplier.x2_50_90 {
-    background: -webkit-linear-gradient(275.69deg, #b0b0b0 14.75%, #e7e7e7 51.62%, #b0b0b0 88.49%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.multiplier.x2_90_100 {
-    background: -webkit-linear-gradient(284.38deg, #ceab57 34.67%, #d2b05e 38.83%, #eacf8f 66.73%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.multiplier.x3_0_50 {
-    background: -webkit-linear-gradient(278.41deg, #bfdada 21.94%, #d9f2f2 49.43%, #ccd9d9 76.92%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.multiplier.x3_50_90 {
-    background: -webkit-linear-gradient(284.38deg, #ce5782 34.67%, #ea7ba3 66.73%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.multiplier.x3_90_100 {
-    background: -webkit-linear-gradient(284.38deg, #52bfd8 34.67%, #49a1b5 66.73%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.multiplier.x4_0_100 {
-    background-color: #000000;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .monthly_rate_cell {

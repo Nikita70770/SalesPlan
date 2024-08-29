@@ -15,7 +15,7 @@ const getCurrTotalSales = sales => {
 };
 
 const getTotalSales = sales => {
-    return sales.map(elem => elem.monthly_rate).reduce((a, b) => a + b, 0);
+    return sales.map(elem => getMonthlyRate(elem.total_payments, elem.monthly_rate)).reduce((a, b) => a + b, 0);
 };
 
 const getMonthlyRate = (amountSale, monthlyRate) => {
@@ -24,33 +24,21 @@ const getMonthlyRate = (amountSale, monthlyRate) => {
     return monthlyRateVal >= 8000000 ? 8000000 : monthlyRateVal;
 };
 
-// const getColorStyle = (rating, monthlyRate, percents) => {
-//     let colorStyle = { backgroundColor: '#ffffff' };
-
-//     const indRate = rating.map(elem => elem.monthlyRate).indexOf(monthlyRate);
-//     console.log(`percents: ${percents}\nindRate: ${indRate}\nmonthlyRate:${monthlyRate}`);
-
-//     rating[indRate]?.data.map(elem => {
-//         const percentsVal = percents > 100 ? 100 : percents;
-//         if (between(percentsVal, elem.range[0], elem.range[1])) colorStyle = elem.bcColor;
-//     });
-
-//     // console.log(`colorStyle: ${JSON.stringify(colorStyle, null, 4)}`);
-
-//     return colorStyle;
-// };
-
-const getMultiplier = (rating, monthlyRate, percents) => {
-    let classMultiplier = '';
+const getColorStyle = (rating, monthlyRate, percents) => {
+    let colorStyle = { backgroundColor: '#ffffff' };
 
     const indRate = rating.map(elem => elem.monthlyRate).indexOf(monthlyRate);
+    // console.log(`percents: ${percents}\nindRate: ${indRate}\nmonthlyRate:${monthlyRate}`);
 
     rating[indRate]?.data.map(elem => {
         const percentsVal = percents > 100 ? 100 : percents;
-        if (between(percentsVal, elem.range[0], elem.range[1])) classMultiplier = elem.className;
+        if (between(percentsVal, elem.range[0], elem.range[1]))
+            colorStyle = { bcColor: elem.bcColor, color: elem.color };
     });
 
-    return classMultiplier;
+    // console.log(`colorStyle: ${JSON.stringify(colorStyle, null, 4)}`);
+
+    return colorStyle;
 };
 
 const SalesService = {
@@ -59,7 +47,8 @@ const SalesService = {
     getCurrTotalSales,
     getTotalSales,
     getMonthlyRate,
-    getMultiplier
+    getColorStyle
+    // getMultiplier
 };
 
 export default SalesService;

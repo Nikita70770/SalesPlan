@@ -4,17 +4,20 @@
         "data": [
             {
                 "range": [0, 50],
-                "className": "x1_0_50",
+                "color": "#ffffff",
+                "bcColor": "#D71920",
                 "imgIcon": null
             },
             {
                 "range": [50, 90],
-                "className": "x1_50_90",
+                "color": "#ffffff",
+                "bcColor": "#666666",
                 "imgIcon": null
             },
             {
                 "range": [90, 100],
-                "className": "x1_90_100",
+                "color": "#ffffff",
+                "bcColor": "linear-gradient(90deg, #AEBC5B 0%, #A5B452 100%)",
                 "imgIcon": null
             }
         ]
@@ -25,17 +28,20 @@
         "data": [
             {
                 "range": [0, 50],
-                "className": "x2_0_50",
+                "color": "#ce8257",
+                "bcColor": "linear-gradient(284.38deg, #CE8257 34.67%, #ECAC88 66.73%)",
                 "imgIcon": "/img/bronze.svg"
             },
             {
                 "range": [50, 90],
-                "className": "x2_50_90",
+                "color": "#B0B0B0",
+                "bcColor": "linear-gradient(275.69deg, #B0B0B0 14.75%, #E7E7E7 51.62%, #B0B0B0 88.49%)",
                 "imgIcon": "/img/silver.svg"
             },
             {
                 "range": [90, 100],
-                "className": "x2_90_100",
+                "color": "#CEAB57",
+                "bcColor": "linear-gradient(284.38deg, #CEAB57 34.67%, #D2B05E 38.83%, #EACF8F 66.73%)",
                 "imgIcon": "/img/gold.svg"
             }
         ]
@@ -46,18 +52,20 @@
         "data": [
             {
                 "range": [0, 50],
-                "className": "x3_0_50",
+                "color": "#BFDADA",
+                "bcColor": "linear-gradient(278.41deg, #BFDADA 21.94%, #D9F2F2 49.43%, #CCD9D9 76.92%)",
                 "imgIcon": "/img/diamond.svg"
             },
             {
                 "range": [50, 90],
-                "className": "x3_50_90",
-
+                "color": "#CE5782",
+                "bcColor": "linear-gradient(284.38deg, #CE5782 34.67%, #EA7BA3 66.73%)",
                 "imgIcon": "/img/star.svg"
             },
             {
                 "range": [90, 100],
-                "className": "x3_90_100",
+                "color": "#52BFD8",
+                "bcColor": "linear-gradient(284.38deg, #52BFD8 34.67%, #49A1B5 66.73%)",
                 "imgIcon": "/img/angel.svg"
             }
         ]
@@ -68,7 +76,8 @@
         "data": [
             {
                 "range": [0, 100],
-                "className": "x4_0_100",
+                "color": "#000000",
+                "bcColor": "#000000",
                 "imgIcon": "/img/demon.svg"
             }
         ]
