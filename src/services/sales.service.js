@@ -1,4 +1,4 @@
-import { between } from '../helpers/helper';
+import { between } from '@helpers/helper';
 
 const getCurrTotalSalesAsPercentage = (currTotalAmountSales, totalSales) => {
     return Math.ceil((currTotalAmountSales * 100) / totalSales);

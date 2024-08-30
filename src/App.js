@@ -1,15 +1,45 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import classNames from 'classnames';
-import CalendarWindow from './components/CalendarWindow';
+import CalendarWindow from '@components/CalendarWindow';
 
-import { MONTHS } from './helpers/calendar';
-import { numberWithSpaces, between, dataLoader } from './helpers/helper';
-import SalesService from './services/sales.service';
+import { MONTHS } from '@helpers/calendar';
+import { numberWithSpaces, between, dataLoader } from '@helpers/helper';
+import SalesService from '@services/sales.service';
 
-import rating from './data/rating.json';
+import rating from '@data/rating.json';
 
 import './App.css';
 import 'react-calendar/dist/Calendar.css';
+
+function AwardImage(props) {
+    const { indRating, currSalesAsPerc, totalPayments, monthlyRate } = props;
+
+    let arrIcons = rating[indRating]?.data
+        .map(elem =>
+            rating[indRating]?.data.length > 1
+                ? between(currSalesAsPerc, elem.range[0], elem.range[1])
+                    ? elem.imgIcon
+                    : null
+                : rating[indRating]?.data[0].imgIcon
+        )
+        .filter(elem => elem !== null);
+
+    return (
+        <div className="image_wrapper">
+            {totalPayments > monthlyRate ? <img className="img_icon" src={arrIcons[0]} alt="" /> : null}
+        </div>
+    );
+}
+
+function Multiplier({ indRating, totalPayments, monthlyRate, styleColor }) {
+    return totalPayments > monthlyRate ? (
+        <span style={{ color: styleColor.color }} className="multiplier">
+            {rating[indRating]?.multiplier}
+        </span>
+    ) : (
+        String.fromCharCode('&shy;')
+    );
+}
 
 function Header({ date, setDate, setSales }) {
     const [calendar, setCalendar] = useState(false);
@@ -47,13 +77,16 @@ function Header({ date, setDate, setSales }) {
         <header className="app_header">
             <div className="wrapper">
                 <ul className="app_header_items">
-                    <li className="header_item logo">
+                    <li className={classNames('header_item', 'logo')}>
                         <img src="/img/logo.svg" alt="Logo" />
                     </li>
-                    <li className="header_item header_title">План продаж</li>
-                    <li className="header_item date">
-                        <button onClick={onOpenCalendar}>
-                            {MONTHS[date?.getMonth()]}&ensp;{date?.getFullYear()}
+                    <li className={classNames('header_item', 'header_title')}>План продаж</li>
+                    <li className={classNames('header_item', 'date')}>
+                        <button className="btn_select_date" onClick={onOpenCalendar}>
+                            <p>
+                                {MONTHS[date?.getMonth()]}&ensp;{date?.getFullYear()}
+                            </p>
+                            <img src="/img/arrow_down.svg" alt="" />
                         </button>
                         <CalendarWindow
                             stateCalendar={calendar}
@@ -65,6 +98,59 @@ function Header({ date, setDate, setSales }) {
                 </ul>
             </div>
         </header>
+    );
+}
+
+function SalesRowData({ item, indItem }) {
+    const currSalesAsPercentage = SalesService.getCurrSalesAsPercentage(item.total_payments, item.monthly_rate);
+
+    const styleColor = SalesService.getColorStyle(
+        rating,
+        SalesService.getMonthlyRate(item.total_payments, item.monthly_rate),
+        currSalesAsPercentage
+    );
+
+    const styleSales = {
+        background: styleColor.bcColor,
+        gridColumn: `1/${currSalesAsPercentage === 0 ? 2 : currSalesAsPercentage} span`
+    };
+
+    const indRating = rating
+        .map(elem => elem.monthlyRate)
+        .indexOf(SalesService.getMonthlyRate(item.total_payments, item.monthly_rate));
+
+    return (
+        <tr key={indItem} className="row_sales">
+            <td className="manager_cell">
+                {item.manager_name}
+                <AwardImage
+                    indRating={indRating}
+                    currSalesAsPerc={currSalesAsPercentage}
+                    totalPayments={item.total_payments}
+                    monthlyRate={item.monthly_rate}
+                />
+            </td>
+            <td className="curr_amount_cell">
+                <td className="curr_amount_sale">{numberWithSpaces(item.total_payments)}&nbsp;&#8381;</td>
+                <td className="curr_amount_progress">
+                    <td style={styleSales}>&shy;</td>
+                    <td className={classNames('separator', '_50')}></td>
+                    <td className={classNames('separator', '_90')}></td>
+                </td>
+            </td>
+            <td className="monthly_rate_cell">
+                <Multiplier
+                    indRating={indRating}
+                    totalPayments={item.total_payments}
+                    monthlyRate={item.monthly_rate}
+                    styleColor={styleColor}
+                />
+                <p className="monthly_rate_text">
+                    {numberWithSpaces(SalesService.getMonthlyRate(item.total_payments, item.monthly_rate))}
+                    &nbsp;&#8381;
+                </p>
+            </td>
+        </tr>
     );
 }
 
@@ -81,100 +167,35 @@ function SalesPlan({ data }) {
         <main className="main">
             <div className="wrapper">
                 <div className="main_content">
-                    <table className="sales_table">
-                        <thead className="sales_thead">
-                            <tr>
-                                <th align="left" className="total_title">
-                                    Общий
-                                </th>
-                                <th className="curr_total_cell">
-                                    <th className="curr_total_sales">
-                                        {numberWithSpaces(currTotalSales)}&nbsp;&#8381;
+                    {data && data.length !== 0 ? (
+                        <table className="sales_table">
+                            <thead className="sales_thead">
+                                <tr>
+                                    <th align="left" className="total_title">
+                                        Общий
                                     </th>
-                                    <th className="curr_total_progress">
-                                        <th style={styleGeneralSales}>&shy;</th>
-                                        <th className="separator _50"></th>
-                                        <th className="separator _90"></th>
+                                    <th className="curr_total_cell">
+                                        <th className="curr_total_sales">
+                                            {numberWithSpaces(currTotalSales)}&nbsp;&#8381;
+                                        </th>
+                                        <th className="curr_total_progress">
+                                            <th style={styleGeneralSales}>&shy;</th>
+                                            <th className={classNames('separator', '_50')}></th>
+                                            <th className={classNames('separator', '_90')}></th>
+                                        </th>
                                     </th>
-                                </th>
-                                <th className="total_sales">{numberWithSpaces(totalSales)}&nbsp;&#8381;</th>
-                            </tr>
-                        </thead>
-                        <tbody className="sales_tbody">
-                            {data.map((item, indItem) => {
-                                const currSalesAsPercentage = SalesService.getCurrSalesAsPercentage(
-                                    item.total_payments,
-                                    item.monthly_rate
-                                );
-
-                                const styleColor = SalesService.getColorStyle(
-                                    rating,
-                                    SalesService.getMonthlyRate(item.total_payments, item.monthly_rate),
-                                    currSalesAsPercentage
-                                );
-
-                                const styleSales = {
-                                    background: styleColor.bcColor,
-                                    gridColumn: `1/${currSalesAsPercentage === 0 ? 2 : currSalesAsPercentage} span`
-                                };
-
-                                const indRate = rating
-                                    .map(elem => elem.monthlyRate)
-                                    .indexOf(SalesService.getMonthlyRate(item.total_payments, item.monthly_rate));
-
-                                let arrIcons = [];
-
-                                // console.log(`classMultiplier: ${JSON.stringify(classMultiplier, null, 4)}`);
-
-                                return (
-                                    <tr key={indItem} className="row_sales">
-                                        <td className="manager_cell">
-                                            {item.manager_name}
-                                            <div className="image_wrapper">
-                                                {rating[indRate]?.data.map(elem => {
-                                                    if (rating[indRate]?.data.length > 1) {
-                                                        if (
-                                                            between(currSalesAsPercentage, elem.range[0], elem.range[1])
-                                                        ) {
-                                                            arrIcons.push(elem.imgIcon);
-                                                        }
-                                                    } else arrIcons.push(rating[indRate]?.data[0].imgIcon);
-                                                })}
-                                                {item.total_payments > item.monthly_rate ? (
-                                                    <img className="img_icon" src={arrIcons[0]} alt="" />
-                                                ) : null}
-                                            </div>
-                                        </td>
-                                        <td className="curr_amount_cell">
-                                            <td className="curr_amount_sale">
-                                                {numberWithSpaces(item.total_payments)}&nbsp;&#8381;
-                                            </td>
-                                            <td className="curr_amount_progress">
-                                                <td style={styleSales}>&shy;</td>
-                                                <td className="separator _50"></td>
-                                                <td className="separator _90"></td>
-                                            </td>
-                                        </td>
-                                        <td className="monthly_rate_cell">
-                                            {item.total_payments > item.monthly_rate ? (
-                                                <span style={{ color: styleColor.color }} className="multiplier">
-                                                    {rating[indRate]?.multiplier}
-                                                </span>
-                                            ) : (
-                                                String.fromCharCode('&shy;')
-                                            )}
-                                            <p className="monthly_rate_text">
-                                                {numberWithSpaces(
-                                                    SalesService.getMonthlyRate(item.total_payments, item.monthly_rate)
-                                                )}
-                                                &nbsp;&#8381;
-                                            </p>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                                    <th className="total_sales">{numberWithSpaces(totalSales)}&nbsp;&#8381;</th>
+                                </tr>
+                            </thead>
+                            <tbody className="sales_tbody">
+                                {data.map((item, indItem) => {
+                                    return <SalesRowData indItem={indItem} item={item} />;
+                                })}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p className="error_msg">Данные отсутствуют!</p>
+                    )}
                 </div>
             </div>
         </main>
@@ -204,7 +225,6 @@ function App() {
                 sales.sort(function (a, b) {
                     return b.total_payments - a.total_payments;
                 });
-                setSales(sales);
             });
         }, 5 * 60 * 1000);
 

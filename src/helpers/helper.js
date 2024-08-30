@@ -8,6 +8,13 @@ export const numberWithSpaces = x => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
 
+export const sortInDescendingOrder = (data, key) => {
+    const newData = data.map(elem => elem[key]);
+    return newData.sort(function compare(a, b) {
+        return b - a;
+    });
+};
+
 export const dataLoader = async path => {
     const config = {
         headers: {

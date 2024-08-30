@@ -1,9 +1,12 @@
 .app {
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
-    /* background-color: green; */
 }
 
 .wrapper {
+    width: 100%;
+    height: 100%;
     padding: 0 3.5rem;
 }
 
@@ -15,11 +18,17 @@
 }
 
 .app_header_items {
-    /* padding: 35px 50px; */
     padding: 1.5rem 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.header_item.logo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
 }
 
 .header_item.header_title {
@@ -33,11 +42,21 @@
     color: #666666;
 }
 
+.btn_select_date {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    cursor: pointer;
+}
+
 .calendar_header {
     text-align: right;
 }
 
 .calendar_window {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
     position: absolute;
     right: 0;
     top: 0;
@@ -59,15 +78,36 @@
 
 /* Main */
 
+.main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.main .wrapper {
+    margin: 60px 0;
+    flex-grow: 1;
+}
+
 .main_content {
     width: 100%;
     height: 100%;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 .sales_table {
-    margin-top: 60px;
+    width: 100%;
+    height: max-content;
     display: grid;
+    row-gap: 25px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
 thead,
@@ -83,8 +123,12 @@ tr {
     column-gap: 5rem;
 }
 
-.sales_thead tr {
-    margin-bottom: 25px;
+.sales_thead::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #d9d9d9;
 }
 
 .total_title {
@@ -202,5 +246,11 @@ tr {
     grid-template-columns: 0.5fr max-content;
 }
 
-.monthly_rate_text {
+.error_msg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: calc(14px + 11 * (100vw - 320px) / 1600);
+    font-family: 'Montserrat-SemiBold';
 }
