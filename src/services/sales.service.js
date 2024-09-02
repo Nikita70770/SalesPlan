@@ -19,7 +19,7 @@ const getTotalSales = sales => {
 };
 
 const getMonthlyRate = (amountSale, monthlyRate) => {
-    const monthlyRateVal = Math.ceil(amountSale / monthlyRate) * monthlyRate;
+    const monthlyRateVal = amountSale === 0 ? monthlyRate : Math.ceil(amountSale / monthlyRate) * monthlyRate;
     // console.log(`monthlyRateVal: ${monthlyRateVal}`);
     return monthlyRateVal >= 8000000 ? 8000000 : monthlyRateVal;
 };

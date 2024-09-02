@@ -236,16 +236,16 @@ function App() {
             const newDate = localStorage.getItem('date') ? new Date(localStorage.getItem('date')) : Date();
             console.log(`in interval newDate: ${newDate}`);
 
-            // const month = new Date(localStorage.getItem('date')).getMonth() + 1;
-            // const year = new Date(localStorage.getItem('date')).getFullYear();
             const month = newDate.getMonth() + 1;
             const year = newDate.getFullYear();
-            const path = `http://10.13.13.2:8000/successManagers?month=${month}&year=${year}`;
 
-            console.log(`in interval path: ${path}`);
+            const pathSales = `http://10.199.2.111/successManagers?month=${month}&year=${year}`;
+            const pathOther = `http://10.199.2.111/successManagers/other?month=${month}&year=${year}`;
 
-            REQUESTS_MAP.get_sales_data(path);
-            REQUESTS_MAP.get_other_data(path);
+            console.log(`in interval path: ${pathSales}`);
+
+            REQUESTS_MAP.get_sales_data(pathSales);
+            REQUESTS_MAP.get_other_data(pathOther);
         }, 5 * 60 * 1000);
 
         return () => {
@@ -259,16 +259,16 @@ function App() {
 
         localStorage.setItem('date', newDate.toString());
 
-        // const month = new Date(localStorage.getItem('date')).getMonth() + 1;
-        // const year = new Date(localStorage.getItem('date')).getFullYear();
         const month = newDate.getMonth() + 1;
         const year = newDate.getFullYear();
-        const path = `http://10.13.13.2:8000/successManagers?month=${month}&year=${year}`;
 
-        console.log(`path: ${path}`);
+        const pathSales = `http://10.199.2.111/successManagers?month=${month}&year=${year}`;
+        const pathOther = `http://10.199.2.111/successManagers/other?month=${month}&year=${year}`;
 
-        REQUESTS_MAP.get_sales_data(path);
-        REQUESTS_MAP.get_other_data(path);
+        // console.log(`path: ${path}`);
+
+        REQUESTS_MAP.get_sales_data(pathSales);
+        REQUESTS_MAP.get_other_data(pathOther);
     }, [localStorage.getItem('date')]);
 
     return (
@@ -280,11 +280,3 @@ function App() {
 }
 
 export default App;
-
-// setSales([
-//     { manager_name: 'Имя Фамилия', total_payments: 2100000, monthly_rate: 2000000 },
-//     { manager_name: 'Имя Фамилия', total_payments: 100000, monthly_rate: 2000000 },
-//     { manager_name: 'Имя Фамилия', total_payments: 1300000, monthly_rate: 2000000 }
-// ]);
-
-// setOtherData([{ manager_name: 'Имя Фамилия', total_payments: 16123456, monthly_rate: 2000000 }]);
