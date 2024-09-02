@@ -41,36 +41,18 @@ function Multiplier({ indRating, totalPayments, monthlyRate, styleColor }) {
     );
 }
 
-function Header({ date, setDate, setSales }) {
+function Header({ date, setDate }) {
     const [calendar, setCalendar] = useState(false);
 
     function onOpenCalendar() {
         setCalendar(true);
     }
 
-    async function onChangeDate(dateVal) {
-        const path = `http://10.199.2.111/successManagers?month=${
-            dateVal.getMonth() + 1
-        }&year=${dateVal.getFullYear()}`;
+    function onChangeDate(dateVal) {
+        localStorage.setItem('date', new Date(dateVal).toString());
 
-        await dataLoader(path).then(response => {
-            const sales = Array.from(response);
-            // Дополняем данные
-            for (let i = 0; i < sales.length; i++) {
-                sales[i]['total_payments'] = Math.ceil(sales[i]['total_payments']);
-                sales[i]['monthly_rate'] = 2000000;
-            }
-            // Сортируем данные по убыванию
-            sales.sort(function (a, b) {
-                return b.total_payments - a.total_payments;
-            });
-
-            localStorage.setItem('date', new Date(dateVal).toString());
-
-            setDate(dateVal);
-            setSales(sales);
-            setCalendar(!calendar);
-        });
+        setDate(dateVal);
+        setCalendar(!calendar);
     }
 
     return (
@@ -154,11 +136,12 @@ function SalesRowData({ item, indItem }) {
     );
 }
 
-function SalesPlan({ data }) {
+function SalesPlan({ sales, otherData }) {
     // console.log(`sales: ${JSON.stringify(data, null, 4)}`);
+    const generalData = [...sales, ...otherData];
 
-    const currTotalSales = SalesService.getCurrTotalSales(data);
-    const totalSales = SalesService.getTotalSales(data);
+    const currTotalSales = SalesService.getCurrTotalSales(sales);
+    const totalSales = SalesService.getTotalSales(sales);
     const totalSalesAsPercentage = SalesService.getCurrTotalSalesAsPercentage(currTotalSales, totalSales);
 
     const styleGeneralSales = { backgroundColor: '#666666', gridColumn: `1/${totalSalesAsPercentage} span` };
@@ -167,7 +150,7 @@ function SalesPlan({ data }) {
         <main className="main">
             <div className="wrapper">
                 <div className="main_content">
-                    {data && data.length !== 0 ? (
+                    {generalData && generalData.length !== 0 ? (
                         <table className="sales_table">
                             <thead className="sales_thead">
                                 <tr>
@@ -188,9 +171,13 @@ function SalesPlan({ data }) {
                                 </tr>
                             </thead>
                             <tbody className="sales_tbody">
-                                {data.map((item, indItem) => {
-                                    return <SalesRowData indItem={indItem} item={item} />;
-                                })}
+                                {sales.map((item, indItem) => (
+                                    <SalesRowData indItem={indItem} item={item} />
+                                ))}
+                                <tr className="hr_line"></tr>
+                                {otherData.map((item, indItem) => (
+                                    <SalesRowData indItem={indItem} item={item} />
+                                ))}
                             </tbody>
                         </table>
                     ) : (
@@ -204,28 +191,61 @@ function SalesPlan({ data }) {
 
 function App() {
     const [sales, setSales] = useState([]);
-    const [date, setDate] = useState(new Date());
+    const [otherData, setOtherData] = useState([]);
+    const [date, setDate] = useState(
+        localStorage.getItem('date') ? new Date(localStorage.getItem('date')) : new Date()
+    );
 
-    useEffect(() => {
-        localStorage.setItem('date', new Date().toString());
-
-        let interval = setInterval(async () => {
-            const month = new Date(localStorage.getItem('date')).getMonth() + 1;
-            const year = new Date(localStorage.getItem('date')).getFullYear();
-            const path = `http://10.199.2.111/successManagers?month=${month}&year=${year}`;
-
+    const REQUESTS_MAP = {
+        get_sales_data: async path => {
             await dataLoader(path).then(response => {
-                const sales = Array.from(response);
+                const data = Array.from(response);
                 // Дополняем данные
-                for (let i = 0; i < sales.length; i++) {
-                    sales[i]['total_payments'] = Math.ceil(sales[i]['total_payments']);
-                    sales[i]['monthly_rate'] = 2000000;
+                for (let i = 0; i < data.length; i++) {
+                    data[i]['total_payments'] = Math.ceil(data[i]['total_payments']);
+                    data[i]['monthly_rate'] = 2000000;
                 }
                 // Сортируем данные по убыванию
-                sales.sort(function (a, b) {
+                data.sort(function (a, b) {
                     return b.total_payments - a.total_payments;
                 });
+                setSales(data);
             });
+        },
+        get_other_data: async path => {
+            await dataLoader(path).then(response => {
+                const data = Array.from(response);
+                // Дополняем данные
+                for (let i = 0; i < data.length; i++) {
+                    data[i]['total_payments'] = Math.ceil(data[i]['total_payments']);
+                    data[i]['monthly_rate'] = 2000000;
+                }
+                // Сортируем данные по убыванию
+                data.sort(function (a, b) {
+                    return b.total_payments - a.total_payments;
+                });
+                setOtherData(data);
+            });
+        }
+    };
+
+    useEffect(() => {
+        // localStorage.setItem('date', new Date().toString());
+
+        let interval = setInterval(async () => {
+            const newDate = localStorage.getItem('date') ? new Date(localStorage.getItem('date')) : Date();
+            console.log(`in interval newDate: ${newDate}`);
+
+            // const month = new Date(localStorage.getItem('date')).getMonth() + 1;
+            // const year = new Date(localStorage.getItem('date')).getFullYear();
+            const month = newDate.getMonth() + 1;
+            const year = newDate.getFullYear();
+            const path = `http://10.13.13.2:8000/successManagers?month=${month}&year=${year}`;
+
+            console.log(`in interval path: ${path}`);
+
+            REQUESTS_MAP.get_sales_data(path);
+            REQUESTS_MAP.get_other_data(path);
         }, 5 * 60 * 1000);
 
         return () => {
@@ -233,12 +253,38 @@ function App() {
         };
     }, []);
 
+    useEffect(() => {
+        const newDate = localStorage.getItem('date') ? new Date(localStorage.getItem('date')) : new Date();
+        console.log(`newDate: ${newDate}`);
+
+        localStorage.setItem('date', newDate.toString());
+
+        // const month = new Date(localStorage.getItem('date')).getMonth() + 1;
+        // const year = new Date(localStorage.getItem('date')).getFullYear();
+        const month = newDate.getMonth() + 1;
+        const year = newDate.getFullYear();
+        const path = `http://10.13.13.2:8000/successManagers?month=${month}&year=${year}`;
+
+        console.log(`path: ${path}`);
+
+        REQUESTS_MAP.get_sales_data(path);
+        REQUESTS_MAP.get_other_data(path);
+    }, [localStorage.getItem('date')]);
+
     return (
         <div className="app">
             <Header date={date} setDate={setDate} setSales={setSales} />
-            <SalesPlan data={sales} />
+            <SalesPlan sales={sales} otherData={otherData} />
         </div>
     );
 }
 
 export default App;
+
+// setSales([
+//     { manager_name: 'Имя Фамилия', total_payments: 2100000, monthly_rate: 2000000 },
+//     { manager_name: 'Имя Фамилия', total_payments: 100000, monthly_rate: 2000000 },
+//     { manager_name: 'Имя Фамилия', total_payments: 1300000, monthly_rate: 2000000 }
+// ]);
+
+// setOtherData([{ manager_name: 'Имя Фамилия', total_payments: 16123456, monthly_rate: 2000000 }]);
