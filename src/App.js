@@ -14,6 +14,8 @@ import 'react-calendar/dist/Calendar.css';
 function AwardImage(props) {
     const { indRating, currSalesAsPerc, totalPayments, monthlyRate } = props;
 
+    console.log(`indRating: ${indRating}\ntotalPayments: ${totalPayments}\nmonthlyRate: ${monthlyRate}`);
+
     let arrIcons = rating[indRating]?.data
         .map(elem =>
             rating[indRating]?.data.length > 1
@@ -29,9 +31,12 @@ function AwardImage(props) {
             {totalPayments > monthlyRate ? <img className="img_icon" src={arrIcons[0]} alt="" /> : null}
         </div>
     );
+
+    // return <div></div>;
 }
 
-function Multiplier({ indRating, totalPayments, monthlyRate, styleColor }) {
+function Multiplier(props) {
+    const { indRating, totalPayments, monthlyRate, styleColor } = props;
     return totalPayments > monthlyRate ? (
         <span style={{ color: styleColor.color }} className="multiplier">
             {rating[indRating]?.multiplier}
@@ -85,21 +90,18 @@ function Header({ date, setDate }) {
 
 function SalesRowData({ item, indItem }) {
     const currSalesAsPercentage = SalesService.getCurrSalesAsPercentage(item.total_payments, item.monthly_rate);
+    const monthlyRate = SalesService.getMonthlyRate(item.total_payments, item.monthly_rate);
+    const indRating = rating.map(elem => elem.monthlyRate).indexOf(monthlyRate >= 8000000 ? 8000000 : monthlyRate);
 
     const styleColor = SalesService.getColorStyle(
         rating,
         SalesService.getMonthlyRate(item.total_payments, item.monthly_rate),
         currSalesAsPercentage
     );
-
     const styleSales = {
         background: styleColor.bcColor,
         gridColumn: `1/${currSalesAsPercentage === 0 ? 2 : currSalesAsPercentage} span`
     };
-
-    const indRating = rating
-        .map(elem => elem.monthlyRate)
-        .indexOf(SalesService.getMonthlyRate(item.total_payments, item.monthly_rate));
 
     return (
         <tr key={indItem} className="row_sales">
@@ -140,11 +142,47 @@ function SalesPlan({ sales, otherData }) {
     // console.log(`sales: ${JSON.stringify(data, null, 4)}`);
     const generalData = [...sales, ...otherData];
 
-    const currTotalSales = SalesService.getCurrTotalSales(sales);
-    const totalSales = SalesService.getTotalSales(sales);
-    const totalSalesAsPercentage = SalesService.getCurrTotalSalesAsPercentage(currTotalSales, totalSales);
+    const CURR_TOTAL_SALES_MAP = {
+        getByManagers: data => {
+            return SalesService.getCurrTotalSales(data);
+        },
+        getByOther: data => {
+            return SalesService.getCurrTotalSales(data);
+        }
+    };
 
-    const styleGeneralSales = { backgroundColor: '#666666', gridColumn: `1/${totalSalesAsPercentage} span` };
+    const TOTAL_SALES_MAP = {
+        getByManagers: data => {
+            return SalesService.getTotalSales(data);
+        },
+        getByOther: data => {
+            return SalesService.getTotalSales(data);
+        }
+    };
+
+    const TOTAL_SALES_AS_PER_MAP = {
+        getByManagers: data => {
+            const currTotalSales = CURR_TOTAL_SALES_MAP.getByManagers(data);
+            const totalSales = TOTAL_SALES_MAP.getByManagers(data);
+            return SalesService.getCurrTotalSalesAsPercentage(currTotalSales, totalSales);
+        },
+        getByOther: data => {
+            const currTotalSales = CURR_TOTAL_SALES_MAP.getByManagers(data);
+            const totalSales = TOTAL_SALES_MAP.getByManagers(data);
+            return SalesService.getCurrTotalSalesAsPercentage(currTotalSales, totalSales);
+        }
+    };
+
+    const STYLES_GENERAL_SALES_MAP = {
+        getByManagers: data => {
+            const totalSalesAsPer = TOTAL_SALES_AS_PER_MAP.getByManagers(data);
+            return { backgroundColor: '#666666', gridColumn: `1/${totalSalesAsPer} span` };
+        },
+        getByOther: data => {
+            const totalSalesAsPer = TOTAL_SALES_AS_PER_MAP.getByManagers(data);
+            return { backgroundColor: '#666666', gridColumn: `1/${totalSalesAsPer} span` };
+        }
+    };
 
     return (
         <main className="main">
@@ -159,15 +197,18 @@ function SalesPlan({ sales, otherData }) {
                                     </th>
                                     <th className="curr_total_cell">
                                         <th className="curr_total_sales">
-                                            {numberWithSpaces(currTotalSales)}&nbsp;&#8381;
+                                            {/* {numberWithSpaces(currTotalSales)}&nbsp;&#8381; */}
+                                            {numberWithSpaces(CURR_TOTAL_SALES_MAP.getByManagers(sales))}&nbsp;&#8381;
                                         </th>
                                         <th className="curr_total_progress">
-                                            <th style={styleGeneralSales}>&shy;</th>
+                                            <th style={STYLES_GENERAL_SALES_MAP.getByManagers(sales)}>&shy;</th>
                                             <th className={classNames('separator', '_50')}></th>
                                             <th className={classNames('separator', '_90')}></th>
                                         </th>
                                     </th>
-                                    <th className="total_sales">{numberWithSpaces(totalSales)}&nbsp;&#8381;</th>
+                                    <th className="total_sales">
+                                        {numberWithSpaces(TOTAL_SALES_MAP.getByManagers(sales))}&nbsp;&#8381;
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody className="sales_tbody">
@@ -175,6 +216,24 @@ function SalesPlan({ sales, otherData }) {
                                     <SalesRowData indItem={indItem} item={item} />
                                 ))}
                                 <tr className="hr_line"></tr>
+                                <tr>
+                                    <th align="left" className="total_title">
+                                        Общий
+                                    </th>
+                                    <th className="curr_total_cell">
+                                        <th className="curr_total_sales">
+                                            {numberWithSpaces(CURR_TOTAL_SALES_MAP.getByOther(otherData))}&nbsp;&#8381;
+                                        </th>
+                                        <th className="curr_total_progress">
+                                            <th style={STYLES_GENERAL_SALES_MAP.getByOther(otherData)}>&shy;</th>
+                                            <th className={classNames('separator', '_50')}></th>
+                                            <th className={classNames('separator', '_90')}></th>
+                                        </th>
+                                    </th>
+                                    <th className="total_sales">
+                                        {numberWithSpaces(TOTAL_SALES_MAP.getByOther(otherData))}&nbsp;&#8381;
+                                    </th>
+                                </tr>
                                 {otherData.map((item, indItem) => (
                                     <SalesRowData indItem={indItem} item={item} />
                                 ))}
@@ -225,6 +284,7 @@ function App() {
                     return b.total_payments - a.total_payments;
                 });
                 setOtherData(data);
+                console.log(`data: ${JSON.stringify(data, null, 4)}`);
             });
         }
     };
@@ -239,8 +299,8 @@ function App() {
             const month = newDate.getMonth() + 1;
             const year = newDate.getFullYear();
 
-            const pathSales = `http://10.199.2.111/successManagers?month=${month}&year=${year}`;
-            const pathOther = `http://10.199.2.111/successManagers/other?month=${month}&year=${year}`;
+            const pathSales = `http://10.199.2.112/successManagers?month=${month}&year=${year}`;
+            const pathOther = `http://10.199.2.112/successManagers/other?month=${month}&year=${year}`;
 
             console.log(`in interval path: ${pathSales}`);
 
@@ -262,8 +322,8 @@ function App() {
         const month = newDate.getMonth() + 1;
         const year = newDate.getFullYear();
 
-        const pathSales = `http://10.199.2.111/successManagers?month=${month}&year=${year}`;
-        const pathOther = `http://10.199.2.111/successManagers/other?month=${month}&year=${year}`;
+        const pathSales = `http://10.199.2.112/successManagers?month=${month}&year=${year}`;
+        const pathOther = `http://10.199.2.112/successManagers/other?month=${month}&year=${year}`;
 
         // console.log(`path: ${path}`);
 

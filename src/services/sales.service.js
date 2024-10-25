@@ -19,12 +19,15 @@ const getTotalSales = sales => {
 };
 
 const getMonthlyRate = (amountSale, monthlyRate) => {
+    // console.log(`amountSale: ${amountSale}\nmonthlyRate: ${monthlyRate}`);
     const monthlyRateVal = amountSale === 0 ? monthlyRate : Math.ceil(amountSale / monthlyRate) * monthlyRate;
+    return monthlyRateVal;
     // console.log(`monthlyRateVal: ${monthlyRateVal}`);
-    return monthlyRateVal >= 8000000 ? 8000000 : monthlyRateVal;
+    // return monthlyRateVal >= 8000000 ? 8000000 : monthlyRateVal;
 };
 
-const getColorStyle = (rating, monthlyRate, percents) => {
+const getColorStyle = (rating, monthlyRateVal, percents) => {
+    let monthlyRate = monthlyRateVal >= 8000000 ? 8000000 : monthlyRateVal;
     let colorStyle = { backgroundColor: '#ffffff' };
 
     const indRate = rating.map(elem => elem.monthlyRate).indexOf(monthlyRate);
